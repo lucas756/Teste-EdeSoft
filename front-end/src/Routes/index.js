@@ -13,9 +13,8 @@ function Routes(){
     return(
         <BrowserRouter>
             <Switch>
-                <Route path="/" exact component={Dashboard} />
-                <Route path="/sign-up" component={SignUp} />
-                <Route path="/relatorio" component={Relatorio} />
+              
+                <Route path="/" component={SignUp} />
             </Switch>        
         </BrowserRouter>
     );

@@ -6,7 +6,9 @@ export const Container = styled.div`
     height: 100px;
     width: 100%;
     padding: 35px;
-    background: #2bf097;
+    background: #4287f5;
+    color: #fff;
+    font-family: sans-serif;
   
 `;
 

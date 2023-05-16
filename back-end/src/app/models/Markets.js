@@ -1,19 +1,20 @@
 import Sequelize, { Model } from 'sequelize';
 
 
-class Animais extends Model {
+class Markets extends Model {
   static init(sequelize) {
     super.init(
       {
-        name_animal: Sequelize.STRING,
-        raca_animal: Sequelize.STRING,
+        name: Sequelize.STRING,
+        porcentagem: Sequelize.FLOAT,
       },
       {
         sequelize,
       }
     );
+    
     return this;
   }
   
 }
-export default Animais;
+export default Markets;

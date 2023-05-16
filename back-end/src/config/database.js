@@ -1,11 +1,11 @@
 require('dotenv/config');
 
 module.exports = {
-  dialect: 'mysql',
+  dialect: 'postgres',
   host: 'localhost',
-  username: 'root',
-  password: 'root',
-  database: 'testeedesoft',
+  username: 'postgres',
+  password: 'postgres',
+  database: 'precos',
   define: {
     timestamps: true,
     underscored: true,

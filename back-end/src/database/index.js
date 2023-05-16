@@ -1,12 +1,11 @@
 import Sequelize from 'sequelize';
 
-import User from "../app/models/User"
-import Animal from "../app/models/Animais"
-import Relation from "../app/models/Relation"
+import User from "../app/models/Magalu"
+import Markets from '../app/models/Markets';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Animal, Relation];
+const models = [User, Markets];
 
 class Database {
   constructor() {

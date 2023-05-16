@@ -1,79 +1,62 @@
-import User from '../models/User.js';
-import Animais from '../models/Animais';
-import Relation from '../models/Relation';
+import Magalu from '../models/Magalu.js';
 import * as Yup from 'yup';
-
+import csv from 'csvtojson'
+import path from 'path'
+import { Op } from 'sequelize';
+import Markets from '../models/Markets.js';
 
 class UserController {
-    async store(req, res) {
-        const schema = Yup.object().shape({
-            name: Yup.string().required(),
-          });
-      
-          if (!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: 'Validation fails' });
-          }
-      
-          const user = await User.create(req.body);
+  async store(req, res) {
+    if (!req.files) {
+      return res.status(500).send({ msg: "file is not found" })
+    }
+    const myFile = req.files.file
+    myFile.mv(`${path.join(__dirname, '../../')}/${myFile.name}`, function (err) {
+      if (err) {
+        console.log(err)
+        return res.status(500).send({ msg: "Error occured" });
+      }
+    });
+    const csvFilePath = `${path.join(__dirname, '../../')}${myFile.name}`;
 
-          const animal = {
-            name_animal: req.body.name_animal,
-            raca_animal: req.body.raca,
-          }
-
-          
-          const animais = await Animais.create(animal);
-          
-          const relation = {
-            user_id: user.dataValues.id,
-            animal_id: animais.dataValues.id 
-          }
-          const relacao = await Relation.create(relation);
-
-          return res.json({usuario: {
-            user,
-            animais,
-            relacao
-          }});
+    const numberToReal = (numero) => {
+      var numero = numero.toFixed(2).split('.');
+      numero[0] = "R$ " + numero[0].split(/(?=(?:...)*$)/).join('.');
+      return numero.join(',');
     }
 
-    async index(req, res) {
-        const busca = await User.findAll();
+    csv()
+      .fromFile(csvFilePath)
+      .then(async (jsonObj) => {
+        for (const item of jsonObj) {
+          if (item['valor base']) {
+            if (item['comprimento'] && item['largura'] && item['altura']) {
+              item.cubagem = (item['comprimento'] * item['largura'] * item['altura'] / 6000).toFixed(2)
+              item.cubagem = 0.3
+              let testee = req.body.markets.split(',')
+              if (testee.filter(e => e == 'magalu').length > 0) {
+                const teste = await Magalu.findOne({ where: { [Op.and]: [{ peso_final: { [Op.gt]: item.cubagem } }, { peso_inicial: { [Op.lte]: item.cubagem } }] } });
+                const ooi = await Markets.findOne({ where: { name: "magalu" } })
+                item.magalu = numberToReal(Number(item['valor base']) + (Number(item['valor base']) * (Number(ooi.porcentagem) / 100)) + (teste.value - (teste.value * (req.body.desconto / 100))))
+              }
 
-        return res.json(busca)
-    }
+              if (testee.filter(e => e == 'shopee').length > 0) {
+                const ooi = await Markets.findOne({ where: { name: "shopee" } })
+                item.shopee = numberToReal(Number(item['valor base']) + (Number(item['valor base']) * (ooi.porcentagem / 100)))
+              }
 
-    async delete(req, res) {
+            }
 
-      const user = await User.findByPk(req.params.id);
 
-      const relation = await Relation.findAll({
-        where: {
-          user_id: req.params.id
-      }})
+          }
+        }
 
-      const id = relation[0].dataValues.animal_id;
-
-     const animais = await Animais.findByPk(id);
-
-      await animais.destroy();
-
-      await user.destroy();
-
-      return res.json('Usuario deletado');
-    }
-
-    
-    async update(req, res) {
-      console.log(req.body)
-      const users = await User.findByPk(req.params.id);
-
-      users.name = req.body.name
-
-      await users.save();
-
-      return res.json(users);
+        return res.json(jsonObj)
+      }).catch(err => {
+        console.log(err)
+      })
   }
+
 }
 
 export default new UserController();

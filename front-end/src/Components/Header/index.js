@@ -8,13 +8,8 @@ function Header() {
   return (
     <>
       <Container >
-        <h1>Dog and peoples</h1>
+        <h1>Leitura excel</h1>
 
-        <Links>
-            <Link to="/">Home</Link>
-            <Link to="/sign-up">Cadastre-se</Link>
-            <Link to="/relatorio">Relatorio</Link>
-        </Links>
       </Container>
     </>
   );
