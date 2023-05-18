@@ -1,7 +1,7 @@
 import Sequelize, { Model } from 'sequelize';
 
 
-class Magalu extends Model {
+class Vias extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -22,4 +22,4 @@ class Magalu extends Model {
   }
   
 }
-export default Magalu;
+export default Vias;

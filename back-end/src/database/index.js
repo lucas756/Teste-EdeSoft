@@ -4,12 +4,21 @@ import User from "../app/models/Magalu"
 import Markets from '../app/models/Markets';
 
 import databaseConfig from '../config/database';
+import Vias from '../app/models/Via';
+import Americanas from '../app/models/Americanas';
+import Categoria from '../app/models/Categoria';
 
-const models = [User, Markets];
+const models = [
+  User,
+  Markets,
+  Vias,
+  Americanas,
+  Categoria
+];
 
 class Database {
   constructor() {
-    this.init(); 
+    this.init();
   }
 
   init() {

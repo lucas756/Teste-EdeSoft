@@ -8,26 +8,11 @@ function SignUp() {
   const [data, getFile] = useState([]);
   const [keys, setKeys] = useState([]);
   const [markets, setMarkets] = useState([]);
-  const [desconto, setDesconto] = useState('');
+  const [descontoMagalu, setDescontoMagalu] = useState('');
+  const [descontoVia, setDescontoVia] = useState('');
+  const [descontoAmericanas, setDescontoAmericanas] = useState('');
   const [currentValue, setCurrentValue] = useState('');
   const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleValueChange = (value) => {
-    setCurrentValue(value);
-  };
-  const handleChangeSelect = (value) => {
-    handleValueChange(value);
-    // call method, if it exists
-    console.log(value);
-    // close, after all tasks are finished
-    handleClose();
-  };
 
   const handleChange = (e) => {
     const file = e.target.files[0];
@@ -38,7 +23,9 @@ function SignUp() {
     event.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('desconto', desconto);
+    formData.append('descontoMagalu', descontoMagalu);
+    formData.append('descontoVia', descontoVia);
+    formData.append('descontoAmericanas', descontoAmericanas);
     formData.append('markets', markets);
 
     axios.post('http://localhost:5423/users', formData, {
@@ -53,7 +40,7 @@ function SignUp() {
     })
   }
 
-  
+
 
   return (
     <>
@@ -67,6 +54,10 @@ function SignUp() {
           <div className="btns">
             <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'magalu']) }} >Magalu</button>
             <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'shopee']) }} >Shopee</button>
+            <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'amazon']) }} >Amazon</button>
+            <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'americanas']) }} >Americanas</button>
+            <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'via']) }} >Via Varejo</button>
+            <button className='magalu' type="button" onClick={() => { setMarkets([...markets, 'meli']) }} >Mercado Livre</button>
           </div>
 
           <br />
@@ -78,10 +69,36 @@ function SignUp() {
           {
             markets.filter(e => e == 'magalu').length > 0 ? (
               <div className="btns">
-                <button type="button" className='magalu' onClick={() => { setDesconto(0) }} >vermelho</button>
-                <button type="button" className='magalu' onClick={() => { setDesconto(25) }} >amarelo</button>
-                <button type="button" className='magalu' onClick={() => { setDesconto(50) }} >verde</button>
-                <button type="button" className='magalu' onClick={() => { setDesconto(75) }} >full</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoMagalu(0) }} >vermelho</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoMagalu(25) }} >amarelo</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoMagalu(50) }} >verde</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoMagalu(75) }} >full</button>
+              </div>
+            ) : (
+              <></>
+            )
+          }
+
+          {
+            markets.filter(e => e == 'via').length > 0 ? (
+              <div className="btns">
+                <button type="button" className='magalu' onClick={() => { setDescontoVia(0) }} >Nota até 3,9</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoVia(25) }} >Nota de 4 até 4,9</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoVia(50) }} >Nota 5</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoVia(75) }} >full</button>
+              </div>
+            ) : (
+              <></>
+            )
+          }
+
+          {
+            markets.filter(e => e == 'americanas').length > 0 ? (
+              <div className="btns">
+                <button type="button" className='magalu' onClick={() => { setDescontoAmericanas(0) }} >0 a 119 pontos</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoAmericanas(40) }} >120 a 149 pontos</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoAmericanas(50) }} >150 pontos</button>
+                <button type="button" className='magalu' onClick={() => { setDescontoAmericanas(100) }} >full</button>
               </div>
             ) : (
               <></>
